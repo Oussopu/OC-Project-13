@@ -13,7 +13,7 @@ const users = [
     lastName: 'Rogers',
     email: 'steve@rogers.com',
     password: 'password456'
-  }
+  },
 ]
 
 users.forEach(user => {

@@ -1,11 +1,23 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import '../assets/style/main.css';
 import '../assets/media-style/media-main.css';
 import Header from "../components/Header";
 import WelcomeMessage from "../components/WelcomeMessage";
 import Account from "../components/Account";
 
+
 const User = () => {
+        const { token } = useSelector((state) => state.auth);
+        const navigate = useNavigate();
+
+    useEffect(() => {
+        if (!token) {
+            navigate('/login');
+        }
+    }, [token, navigate]);
+
     return (
         <div>
             <Header isAuthenticated={true} username="Tony" />

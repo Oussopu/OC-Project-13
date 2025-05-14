@@ -15,7 +15,7 @@ const Header = ({ isAuthenticated, username }) => {
             <div>
                 {isAuthenticated ? (
                     <>
-                        <a className="main-nav-item" href="/user">
+                        <a className="main-nav-item" href="/profile">
                             <i className="fa fa-user-circle"></i>
                             {username}
                         </a>
@@ -25,7 +25,7 @@ const Header = ({ isAuthenticated, username }) => {
                         </a>
                     </>
                 ) : (
-                    <a className="main-nav-item" href="/sign-in">
+                    <a className="main-nav-item" href="/login">
                         <i className="fa fa-user-circle"></i>
                         Sign In
                     </a>
