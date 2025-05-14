@@ -3,6 +3,12 @@ const router = express.Router()
 const userController = require('../controllers/userController')
 const tokenValidation = require('../middleware/tokenValidation')
 
+router.get(
+    '/profile',
+    tokenValidation.validateToken,
+    userController.getUserProfile
+);
+
 router.post('/signup', userController.createUser)
 
 router.post('/login', userController.loginUser)

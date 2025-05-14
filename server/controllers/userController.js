@@ -35,21 +35,27 @@ module.exports.loginUser = async (req, res) => {
 }
 
 module.exports.getUserProfile = async (req, res) => {
-  let response = {}
+  let response = {};
 
   try {
-    const responseFromService = await userService.getUserProfile(req)
-    response.status = 200
-    response.message = 'Successfully got user profile data'
-    response.body = responseFromService
+    const responseFromService = await userService.getUserProfile(req);
+
+    if (!responseFromService) {
+      throw new Error('User profile data not found');
+    }
+
+    response.status = 200;
+    response.message = 'Successfully got user profile data';
+    response.body = responseFromService;
   } catch (error) {
-    console.log('Error in userController.js')
-    response.status = 400
-    response.message = error.message
+    console.error('Error in userController.js', error);
+    response.status = 400;
+    response.message = error.message;
+    response.body = null;
   }
 
-  return res.status(response.status).send(response)
-}
+  return res.status(response.status).send(response);
+};
 
 module.exports.updateUserProfile = async (req, res) => {
   let response = {}
