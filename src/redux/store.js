@@ -1,8 +1,12 @@
 import { configureStore } from '@reduxjs/toolkit';
-import rootReducer from './reducers';
+import authReducer from './reducers/authReducer';
+import profileReducer from './reducers/profileReducer';
 
 const store = configureStore({
-    reducer: rootReducer,
+    reducer: {
+        auth: authReducer,
+        profile: profileReducer,
+    },
 });
 
 export default store;
