@@ -1,0 +1,123 @@
+openapi: 3.0.0
+info:
+  title: Transactions API
+  description: API pour gérer les transactions bancaires
+  version: 1.0.0
+servers:
+  - url: http://localhost:3000/api
+    description: Serveur local
+
+paths:
+  /transactions:
+    get:
+      summary: Récupère toutes les transactions pour le mois en cours
+      description: Retourne une liste de toutes les transactions pour le mois en cours, groupées par compte.
+      responses:
+        '200':
+          description: Une liste de transactions
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Transaction'
+        '500':
+          description: Erreur serveur
+
+    post:
+      summary: Ajoute une nouvelle transaction
+      description: Ajoute une nouvelle transaction à la base de données.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Transaction'
+      responses:
+        '201':
+          description: Transaction créée avec succès
+        '400':
+          description: Requête invalide
+
+  /transactions/{id}:
+    get:
+      summary: Récupère les détails d'une transaction
+      description: Retourne les détails d'une transaction spécifique.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID de la transaction
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Détails de la transaction
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Transaction'
+        '404':
+          description: Transaction non trouvée
+
+    put:
+      summary: Met à jour une transaction
+      description: Met à jour les informations d'une transaction spécifique.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID de la transaction
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Transaction'
+      responses:
+        '200':
+          description: Transaction mise à jour avec succès
+        '400':
+          description: Requête invalide
+        '404':
+          description: Transaction non trouvée
+
+    delete:
+      summary: Supprime une transaction
+      description: Supprime une transaction spécifique de la base de données.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID de la transaction
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Transaction supprimée avec succès
+        '404':
+          description: Transaction non trouvée
+
+components:
+  schemas:
+    Transaction:
+      type: object
+      properties:
+        id:
+          type: string
+          description: ID de la transaction
+        accountId:
+          type: string
+          description: ID du compte
+        amount:
+          type: number
+          description: Montant de la transaction
+        date:
+          type: string
+          format: date
+          description: Date de la transaction
+        description:
+          type: string
+          description: Description de la transaction
