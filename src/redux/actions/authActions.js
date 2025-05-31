@@ -17,13 +17,15 @@ export const login = (credentials) => async (dispatch) => {
             },
             body: JSON.stringify(credentials),
         });
+
         const data = await response.json();
-        if (data.body.token) {
+
+        if (data.body && data.body.token) {
             dispatch(loginSuccess(data.body.token));
         } else {
-            dispatch(loginFailure('Invalid credentials'));
+            dispatch(loginFailure(data.message || 'Identifiant ou mot de passe incorrect'));
         }
     } catch (error) {
-        dispatch(loginFailure('An error occurred'));
+        dispatch(loginFailure('Une erreur est survenue'));
     }
 };
