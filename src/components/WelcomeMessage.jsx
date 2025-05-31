@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateUserProfile } from '../redux/actions/profileAction.js';
 
@@ -6,11 +6,8 @@ const WelcomeMessage = () => {
     const { firstName, lastName } = useSelector((state) => state.profile);
     const [isEditing, setIsEditing] = useState(false);
     const [formData, setFormData] = useState({ firstName, lastName });
+    const [error, setError] = useState('');
     const dispatch = useDispatch();
-
-    useEffect(() => {
-        setFormData({ firstName, lastName });
-    }, [firstName, lastName]);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -22,8 +19,18 @@ const WelcomeMessage = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        dispatch(updateUserProfile(formData));
-        setIsEditing(false);
+        setError('');
+
+        if (!formData.firstName && !formData.lastName) {
+            setError('Please enter a first and last name');
+        } else if (!formData.firstName) {
+            setError('Please enter a first name');
+        } else if (!formData.lastName) {
+            setError('Please enter a last name');
+        } else {
+            dispatch(updateUserProfile(formData));
+            setIsEditing(false);
+        }
     };
 
     return (
@@ -39,6 +46,7 @@ const WelcomeMessage = () => {
                             <input type="text" name="lastName" value={formData.lastName} onChange={handleChange} placeholder={lastName} />
                         </div>
                     </div>
+                    {error && <p className="error-message">{error}</p>}
                     <div className="edit-button-group">
                         <button className="edit-button" type="submit">Save</button>
                         <button className="edit-button" type="button" onClick={() => setIsEditing(false)}>Cancel</button>
