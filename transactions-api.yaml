@@ -7,11 +7,16 @@ servers:
   - url: http://localhost:3000/api
     description: Serveur local
 
+security:
+  - BearerAuth: []
+
 paths:
   /transactions:
     get:
       summary: Récupère toutes les transactions pour le mois en cours
       description: Retourne une liste de toutes les transactions pour le mois en cours, groupées par compte.
+      security:
+        - BearerAuth: []
       responses:
         '200':
           description: Une liste de transactions
@@ -21,12 +26,16 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Transaction'
+        '401':
+          description: Non autorisé, token manquant ou invalide
         '500':
           description: Erreur serveur
 
     post:
       summary: Ajoute une nouvelle transaction
       description: Ajoute une nouvelle transaction à la base de données.
+      security:
+        - BearerAuth: []
       requestBody:
         required: true
         content:
@@ -38,11 +47,15 @@ paths:
           description: Transaction créée avec succès
         '400':
           description: Requête invalide
+        '401':
+          description: Non autorisé, token manquant ou invalide
 
   /transactions/{id}:
     get:
       summary: Récupère les détails d'une transaction
       description: Retourne les détails d'une transaction spécifique.
+      security:
+        - BearerAuth: []
       parameters:
         - name: id
           in: path
@@ -57,12 +70,16 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Transaction'
+        '401':
+          description: Non autorisé, token manquant ou invalide
         '404':
           description: Transaction non trouvée
 
-    put:
-      summary: Met à jour une transaction
-      description: Met à jour les informations d'une transaction spécifique.
+    patch:
+      summary: Met à jour partiellement une transaction
+      description: Met à jour partiellement les informations d'une transaction spécifique, comme la catégorie ou la note.
+      security:
+        - BearerAuth: []
       parameters:
         - name: id
           in: path
@@ -75,18 +92,31 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Transaction'
+              type: object
+              properties:
+                category:
+                  type: string
+                  description: Catégorie de la transaction
+                  example: "Food"
+                note:
+                  type: string
+                  description: Note sur la transaction
+                  example: "Achat de pain et pâtisseries"
       responses:
         '200':
-          description: Transaction mise à jour avec succès
+          description: Transaction partiellement mise à jour avec succès
         '400':
           description: Requête invalide
+        '401':
+          description: Non autorisé, token manquant ou invalide
         '404':
           description: Transaction non trouvée
 
     delete:
       summary: Supprime une transaction
       description: Supprime une transaction spécifique de la base de données.
+      security:
+        - BearerAuth: []
       parameters:
         - name: id
           in: path
@@ -97,10 +127,17 @@ paths:
       responses:
         '204':
           description: Transaction supprimée avec succès
+        '401':
+          description: Non autorisé, token manquant ou invalide
         '404':
           description: Transaction non trouvée
 
 components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
   schemas:
     Transaction:
       type: object
@@ -108,16 +145,33 @@ components:
         id:
           type: string
           description: ID de la transaction
+          example: "507f1f77bcf86cd799439011"
         accountId:
           type: string
           description: ID du compte
+          example: "507f1f77bcf86cd799439012"
         amount:
           type: number
           description: Montant de la transaction
+          example: 5.00
+        balance:
+          type: number
+          description: Solde après la transaction
+          example: 2084.60
         date:
           type: string
           format: date
           description: Date de la transaction
+          example: "2020-06-20"
         description:
           type: string
           description: Description de la transaction
+          example: "Golden Sun Bakery"
+        category:
+          type: string
+          description: Catégorie de la transaction
+          example: "Food"
+        note:
+          type: string
+          description: Note sur la transaction
+          example: "Achat de pain et pâtisseries"
