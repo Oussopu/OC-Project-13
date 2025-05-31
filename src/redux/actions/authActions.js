@@ -23,9 +23,9 @@ export const login = (credentials) => async (dispatch) => {
         if (data.body && data.body.token) {
             dispatch(loginSuccess(data.body.token));
         } else {
-            dispatch(loginFailure(data.message || 'Identifiant ou mot de passe incorrect'));
+            dispatch(loginFailure( 'email or password incorrect'));
         }
     } catch (error) {
-        dispatch(loginFailure('Une erreur est survenue'));
+        dispatch(loginFailure('an error has occurred'));
     }
 };
