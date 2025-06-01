@@ -25,30 +25,37 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Transaction'
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                      description: ID de la transaction
+                      example: "507f1f77bcf86cd799439011"
+                    accountId:
+                      type: string
+                      description: ID du compte
+                      example: "507f1f77bcf86cd799439012"
+                    amount:
+                      type: number
+                      description: Montant de la transaction
+                      example: 5.00
+                    balance:
+                      type: number
+                      description: Solde après la transaction
+                      example: 2084.60
+                    date:
+                      type: string
+                      format: date
+                      description: Date de la transaction
+                      example: "2020-06-20"
+                    description:
+                      type: string
+                      description: Description de la transaction
+                      example: "Golden Sun Bakery"
         '401':
           description: Non autorisé, token manquant ou invalide
         '500':
           description: Erreur serveur
-
-    post:
-      summary: Ajoute une nouvelle transaction
-      description: Ajoute une nouvelle transaction à la base de données.
-      security:
-        - BearerAuth: []
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Transaction'
-      responses:
-        '201':
-          description: Transaction créée avec succès
-        '400':
-          description: Requête invalide
-        '401':
-          description: Non autorisé, token manquant ou invalide
 
   /transactions/{id}:
     get:
@@ -74,6 +81,8 @@ paths:
           description: Non autorisé, token manquant ou invalide
         '404':
           description: Transaction non trouvée
+        '500':
+          description: Erreur serveur
 
     patch:
       summary: Met à jour partiellement une transaction
@@ -111,26 +120,8 @@ paths:
           description: Non autorisé, token manquant ou invalide
         '404':
           description: Transaction non trouvée
-
-    delete:
-      summary: Supprime une transaction
-      description: Supprime une transaction spécifique de la base de données.
-      security:
-        - BearerAuth: []
-      parameters:
-        - name: id
-          in: path
-          required: true
-          description: ID de la transaction
-          schema:
-            type: string
-      responses:
-        '204':
-          description: Transaction supprimée avec succès
-        '401':
-          description: Non autorisé, token manquant ou invalide
-        '404':
-          description: Transaction non trouvée
+        '500':
+          description: Erreur serveur
 
 components:
   securitySchemes:
